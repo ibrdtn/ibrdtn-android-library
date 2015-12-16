@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
 
 version = '1.0'
 group = 'de.tubs.ibr.dtn'
@@ -26,6 +28,44 @@ dependencies {
     compile 'com.android.support:support-v4:22.0.0'
 }
 
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+
+                name "ibrdtn-android-library"
+                description "IBR-DTN API library for Android"
+                url "http://github.com/ibrdtn"
+
+                // Set your license
+                licenses {
+                    license {
+                        name "Apache 2.0"
+                        url "https://www.apache.org/licenses/LICENSE-2.0"
+                    }
+                }
+                developers {
+                    developer {
+                        id "morgenroth"
+                        name "Johannes Morgenroth"
+                        email "jm@m-network.de"
+                    }
+                }
+                scm {
+                    connection "https://github.com/ibrdtn/ibrdtn-android-library.git"
+                    developerConnection "https://github.com/ibrdtn/ibrdtn-android-library.git"
+                    url "https://github.com/ibrdtn/ibrdtn-android-library"
+                }
+            }
+        }
+    }
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
@@ -44,5 +84,26 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives javadocJar
     archives sourcesJar
+}
+
+bintray {
+    user = properties.getProperty('bintray.user')
+    key = properties.getProperty('bintray.api_key')
+    configurations = ['archives']
+    publish=true
+    pkg {
+        userOrg = 'morgenroth'
+        repo = 'maven'
+        name = 'ibrdtn-android-library'
+        websiteUrl = 'https://github.com/ibrdtn/ibrdtn-android-library'
+        issueTrackerUrl = 'https://github.com/ibrdtn/ibrdtn-android-library/issues'
+        vcsUrl = 'https://github.com/ibrdtn/ibrdtn-android-library.git'
+        labels = ['ibrdtn', 'dtn']
+        licenses = ['Apache 2.0']
+        version {
+            name=sharedVersion
+            vcsTag=sharedVersion
+        }
+    }
 }
 
