@@ -133,22 +133,18 @@ public abstract class DTNIntentService extends Service {
 	}
 	
 	@Override
-	public void onStart(Intent intent, int startId) {
+	public int onStartCommand(Intent intent, int flags, int startId) {
 		/*
 		 * If no explicit intent do not queue any intent to the handler
 		 * queue
 		 */
 		if (intent == null || intent.getAction() == null) {
-			return;
+			return Service.START_NOT_STICKY;
 		}
 
 		// queue the intent to the handler
 		mServiceHandler.queue(intent, startId);
-	}
-	
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		onStart(intent, startId);
+
 		return Service.START_STICKY;
 	}
 	
