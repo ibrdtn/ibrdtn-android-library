@@ -29,7 +29,6 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".Example" />
         <activity
             android:name=".ExampleActivity"
             android:label="@string/title_activity_example" >
