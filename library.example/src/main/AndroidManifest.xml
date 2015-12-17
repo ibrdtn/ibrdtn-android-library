@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="de.tubs.ibr.dtn.example">
 
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="22" />
-
     <uses-permission android:name="de.tubs.ibr.dtn.permission.DTN_COMMUNICATION"/>
 
     <application
