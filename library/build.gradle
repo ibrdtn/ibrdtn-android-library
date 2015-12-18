@@ -8,8 +8,8 @@ group = 'de.tubs.ibr.dtn'
 def sharedVersion = version
 
 android {
-    compileSdkVersion 22
     buildToolsVersion "23.0.2"
+    compileSdkVersion 23
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 22
