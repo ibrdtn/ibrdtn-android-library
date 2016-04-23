@@ -1,6 +1,6 @@
 /*
  * Block.java
- * 
+ *
  * Copyright (C) 2011 IBR, TU Braunschweig
  *
  * Written-by: Johannes Morgenroth <morgenroth@ibr.cs.tu-bs.de>
@@ -24,6 +24,11 @@ package de.tubs.ibr.dtn.api;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * A Bundle is a protocol data unit consisting of two or more blocks.
+ *
+ * @see https://tools.ietf.org/html/rfc5050#section-3.1
+*/
 public class Bundle implements Parcelable {
 	private EID destination = null;
 	private SingletonEndpoint source = null;
@@ -36,7 +41,7 @@ public class Bundle implements Parcelable {
 	private Long app_data_length = null;
 	private Long fragment_offset = null;
 	private Long fragment_payload = null;
-	
+
 	public enum Priority {
 		LOW,
 		MEDIUM,
@@ -73,29 +78,29 @@ public class Bundle implements Parcelable {
 		DTNSEC_STATUS_CONFIDENTIAL(1 << 0x1D),
 		DTNSEC_STATUS_AUTHENTICATED(1 << 0x1E),
 		IBRDTN_REQUEST_COMPRESSION(1 << 0x1F);
-		
+
 		private int value = 0;
-		
+
 		private ProcFlags(int i) {
 			this.value = i;
 		}
-		
+
 		public int getValue() {
 			return this.value;
 		}
 	};
-	
+
 	public Bundle() {
 	}
-	
+
 	public Bundle(long procflags) {
 		this.procflags = procflags;
 	}
-	
+
 	public Boolean get(ProcFlags flag) {
 		return (flag.getValue() & this.procflags) > 0;
 	}
-	
+
 	public void set(ProcFlags flag, Boolean value) {
 		if (value) {
 			this.procflags |= flag.getValue();
@@ -103,7 +108,7 @@ public class Bundle implements Parcelable {
 			this.procflags &= ~(flag.getValue());
 		}
 	}
-	
+
 	public Priority getPriority() {
 		if (get(ProcFlags.PRIORITY_BIT1))
 		{
@@ -117,7 +122,7 @@ public class Bundle implements Parcelable {
 
 		return Priority.LOW;
 	}
-	
+
 	public void setPriority(Priority p) {
 		// set the priority to the real bundle
 		switch (p)
@@ -138,7 +143,7 @@ public class Bundle implements Parcelable {
 			break;
 		}
 	}
-	
+
 	public EID getDestination() {
 		return destination;
 	}
@@ -211,7 +216,7 @@ public class Bundle implements Parcelable {
 	public void setFragmentOffset(Long fragment_offset) {
 		this.fragment_offset = fragment_offset;
 	}
-	
+
     public Long getFragmentPayload() {
         return fragment_payload;
     }
@@ -223,7 +228,7 @@ public class Bundle implements Parcelable {
 	public Long getProcflags() {
 		return procflags;
 	}
-	
+
 	public int describeContents() {
 		return 0;
 	}
@@ -241,13 +246,13 @@ public class Bundle implements Parcelable {
 			fragment_offset != null,
 			fragment_payload != null
 		};
-		
+
 		// write processing flags
 		dest.writeLong( procflags );
-		
+
 		// write null marker
 		dest.writeBooleanArray(nullMarker);
-		
+
 		if (nullMarker[0]) dest.writeString(destination.toString());
 		if (nullMarker[1]) dest.writeString(source.toString());
 		if (nullMarker[2]) dest.writeString(custodian.toString());
@@ -259,19 +264,19 @@ public class Bundle implements Parcelable {
 		if (nullMarker[8]) dest.writeLong( fragment_offset );
 		if (nullMarker[9]) dest.writeLong( fragment_payload );
 	}
-	
+
     public static final Creator<Bundle> CREATOR = new Creator<Bundle>() {
         public Bundle createFromParcel(final Parcel source) {
         	// create bundle
         	Bundle b = new Bundle();
-        	
+
         	// read processing flags
         	b.procflags = source.readLong();
-        	
+
         	// read null marker array
         	boolean nullMarker[] = { false, false, false, false, false, false, false, false, false, false };
         	source.readBooleanArray(nullMarker);
-        	
+
         	// read destination
         	if (nullMarker[0]) {
 	        	if (b.get(ProcFlags.DESTINATION_IS_SINGLETON)) {
@@ -282,34 +287,34 @@ public class Bundle implements Parcelable {
         	} else {
         		b.destination = null;
         	}
-        	
+
         	if (nullMarker[1]) b.source = new SingletonEndpoint(source.readString());
         	else b.source = null;
-        	
+
         	if (nullMarker[2]) b.custodian = new SingletonEndpoint(source.readString());
         	else b.custodian = null;
-        	
+
         	if (nullMarker[3]) b.reportto = new SingletonEndpoint(source.readString());
         	else b.reportto = null;
-        	
+
         	if (nullMarker[4]) b.lifetime = source.readLong();
         	else b.lifetime = null;
-        	
+
         	if (nullMarker[5]) b.timestamp = new Timestamp( source.readLong() );
         	else b.timestamp = null;
-        	
+
         	if (nullMarker[6]) b.sequencenumber = source.readLong();
         	else b.sequencenumber = null;
-        	
+
         	if (nullMarker[7]) b.app_data_length = source.readLong();
         	else b.app_data_length = null;
-        	
+
         	if (nullMarker[8]) b.fragment_offset = source.readLong();
         	else b.fragment_offset = null;
-        	
+
             if (nullMarker[9]) b.fragment_payload = source.readLong();
             else b.fragment_payload = null;
-        	
+
         	return b;
         }
 

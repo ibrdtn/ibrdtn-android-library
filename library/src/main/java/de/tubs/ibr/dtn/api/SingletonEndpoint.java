@@ -1,6 +1,6 @@
 /*
  * SingletonEndpoint.java
- * 
+ *
  * Copyright (C) 2011 IBR, TU Braunschweig
  *
  * Written-by: Johannes Morgenroth <morgenroth@ibr.cs.tu-bs.de>
@@ -25,26 +25,31 @@ import java.io.Serializable;
 
 import android.os.Parcel;
 
+/**
+ * An endpoint that never contains more than one node.
+ *
+ * @see https://tools.ietf.org/html/rfc5050#section-3.1
+*/
 public class SingletonEndpoint implements EID, Serializable, Comparable<SingletonEndpoint> {
-	
+
 	/**
      * serial id for serializable objects
      */
     private static final long serialVersionUID = -8294770576249979527L;
-    
+
     public static final SingletonEndpoint ME = new SingletonEndpoint("api:me");
 	private String _eid = null;
-	
+
 	public SingletonEndpoint(String id)
 	{
 		_eid = id;
 	}
-	
+
 	public String toString()
 	{
 		return _eid;
 	}
-	
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof SingletonEndpoint) {

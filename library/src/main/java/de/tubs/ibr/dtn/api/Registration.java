@@ -1,6 +1,6 @@
 /*
  * Registration.java
- * 
+ *
  * Copyright (C) 2011 IBR, TU Braunschweig
  *
  * Written-by: Johannes Morgenroth <morgenroth@ibr.cs.tu-bs.de>
@@ -29,36 +29,41 @@ import java.util.Set;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * A Registration characterizes a node's membership in a given endpoint
+ *
+ * @see https://tools.ietf.org/html/rfc5050#section-3.1
+*/
 public class Registration implements Parcelable, Serializable {
-	
+
 	/**
-	 * serial id for serializable objects 
+	 * serial id for serializable objects
 	 */
 	private static final long serialVersionUID = 8857626607076622551L;
-	
+
 	private String endpoint = null;
 	private Set<GroupEndpoint> groups = new LinkedHashSet<GroupEndpoint>();
-	
+
 	public Registration(String endpoint)
 	{
 		this.endpoint = endpoint;
 	}
-	
+
 	public void add(GroupEndpoint eid)
 	{
 		this.groups.add(eid);
 	}
-	
+
 	public String getEndpoint()
 	{
 		return this.endpoint;
 	}
-	
+
 	public Set<GroupEndpoint> getGroups()
 	{
 		return this.groups;
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Registration) {
@@ -72,15 +77,15 @@ public class Registration implements Parcelable, Serializable {
 		if (!this.groups.equals(other.groups)) return false;
 		return true;
 	}
-	
+
     public static final Creator<Registration> CREATOR = new Creator<Registration>() {
         public Registration createFromParcel(final Parcel source) {
         	Registration r = new Registration(source.readString());
-        	
+
         	LinkedList<GroupEndpoint> groups = new LinkedList<GroupEndpoint>();
         	source.readTypedList(groups, GroupEndpoint.CREATOR );
         	r.groups.addAll(groups);
-        	
+
             return r;
         }
 
@@ -104,7 +109,7 @@ public class Registration implements Parcelable, Serializable {
     public int hashCode() {
         int ret = 0;
         if (endpoint != null) endpoint.hashCode();
-        
+
         for (GroupEndpoint group : groups) {
             ret ^= group.hashCode();
         }
@@ -115,13 +120,13 @@ public class Registration implements Parcelable, Serializable {
     @Override
     public String toString() {
         String ret = endpoint + "[ ";
-        
+
         for (GroupEndpoint group : groups) {
             ret += group.toString() + " ";
         }
-        
+
         ret += "]";
-        
+
         return ret;
     }
 }

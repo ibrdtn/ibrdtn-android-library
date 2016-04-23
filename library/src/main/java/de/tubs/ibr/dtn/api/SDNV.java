@@ -1,6 +1,6 @@
 /*
  * SDNV.java
- * 
+ *
  * Copyright (C) 2011 IBR, TU Braunschweig
  *
  * Written-by: Johannes Morgenroth <morgenroth@ibr.cs.tu-bs.de>
@@ -29,6 +29,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * Self-Delimiting Numeric Values
+ *
+ * @see https://tools.ietf.org/html/rfc5050#section-4.1
+*/
 public class SDNV extends Object
 {
     public final static int Read(InputStream in)
@@ -105,7 +110,7 @@ public class SDNV extends Object
             }
         }
     }
-    
+
     public final static int getEncodedLength(int value)
     {
 		int val_len = 0;
