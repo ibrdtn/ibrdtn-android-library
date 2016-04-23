@@ -4,12 +4,15 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Sets an upper bound of bytes to be able to read from a stream.
+*/
 public class TruncatedInputStream extends FilterInputStream {
     /**
      * The maximum size, in bytes.
      */
     private long sizeMax;
-    
+
     /**
      * The current number of bytes.
      */
@@ -20,6 +23,11 @@ public class TruncatedInputStream extends FilterInputStream {
      */
     private boolean closed;
 
+    /**
+     * Wraps an InputStream to not read more than pSizeMax bytes.
+     * @param pIn stream to limit reading from
+     * @param pSizeMax maximum number of bytes to be able to read
+    */
     public TruncatedInputStream(InputStream pIn, long pSizeMax) {
         super(pIn);
         sizeMax = pSizeMax;
@@ -31,7 +39,7 @@ public class TruncatedInputStream extends FilterInputStream {
 
     public int read() throws IOException {
         if (checkLimit()) return -1;
-        
+
         int res = super.read();
         if (res != -1) {
             count++;
@@ -41,7 +49,7 @@ public class TruncatedInputStream extends FilterInputStream {
 
     public int read(byte[] b, int off, int len) throws IOException {
         if (checkLimit()) return -1;
-        
+
         int res = super.read(b, off, len);
         if (res > 0) {
             count += res;

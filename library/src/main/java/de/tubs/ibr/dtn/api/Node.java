@@ -3,10 +3,15 @@ package de.tubs.ibr.dtn.api;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Entity that can send and/or receive bundles.
+ *
+ * @see https://tools.ietf.org/html/rfc5050#section-3.1
+*/
 public class Node implements Parcelable {
 	public SingletonEndpoint endpoint;
 	public String type;
-	
+
 	public int describeContents() {
 		return 0;
 	}
@@ -15,12 +20,12 @@ public class Node implements Parcelable {
 		dest.writeString(endpoint.toString());
 		dest.writeString(type);
 	}
-	
+
     public static final Creator<Node> CREATOR = new Creator<Node>() {
         public Node createFromParcel(final Parcel source) {
         	Node n = new Node();
         	n.endpoint = new SingletonEndpoint(source.readString());
-        	n.type = source.readString();        	
+        	n.type = source.readString();
         	return n;
         }
 

@@ -1,6 +1,6 @@
 /*
  * EID.java
- * 
+ *
  * Copyright (C) 2011 IBR, TU Braunschweig
  *
  * Written-by: Johannes Morgenroth <morgenroth@ibr.cs.tu-bs.de>
@@ -23,6 +23,13 @@ package de.tubs.ibr.dtn.api;
 
 import android.os.Parcelable;
 
+/**
+ * Represents an Endpoint ID
+ * <p>
+ * An endpoint is a set of zero or more bundle nodes that is identified by a
+ * text string that takes the form of a Uniform Resource Identifier
+ * @see https://tools.ietf.org/html/rfc5050#section-4.4
+*/
 public interface EID extends Parcelable {
 	public String toString();
 }
