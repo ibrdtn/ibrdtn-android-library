@@ -4,6 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+/**
+ * BroadcastReceiver for Intents from IBR-DTN
+ */
+
 public class DtnBroadcastReceiver extends BroadcastReceiver {
 
 	@Override

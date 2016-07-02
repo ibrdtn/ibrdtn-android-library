@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Example Activity which contains two
+ * TextViews to send a message via IBR-DTN
+ */
 public class ExampleActivity extends Activity {
 	
 	TextView mDestination = null;

@@ -13,6 +13,10 @@ import de.tubs.ibr.dtn.api.SessionDestroyedException;
 import de.tubs.ibr.dtn.api.SimpleDataHandler;
 import de.tubs.ibr.dtn.api.SingletonEndpoint;
 
+/**
+ * IntentService to send and receive Bundles via IBR-DTN
+ */
+
 public class MyDtnIntentService extends DTNIntentService {
 	
 	private static final String TAG = "MyDtnIntentService";
@@ -35,7 +39,8 @@ public class MyDtnIntentService extends DTNIntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		
+
+		//register this Service at IBR-DTN
 		Registration reg = new Registration("minimal-example");
 		try {
 			initialize(reg);
@@ -44,27 +49,38 @@ public class MyDtnIntentService extends DTNIntentService {
 		}
 	}
 
+	/**
+	 * Filter the intent-action and do corresponding work
+	 * @param intent received intent
+     */
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		String action = intent.getAction();
-		
+
+		//if a new bundle was received by IBR-DTN
 		if (de.tubs.ibr.dtn.Intent.RECEIVE.equals(action)) {
 			try {
+				//query all available bundles so it can be processed by the DataHandler
 				while (mSession.queryNext());
 			} catch (SessionDestroyedException e) {
 				Log.e(TAG, "session destroyed", e);
 			}
 		}
+		//if a message has to be send
 		else if (ACTION_SEND_MESSAGE.equals(action)) {
 			try {
+				//create destination endpoint
 				SingletonEndpoint destination = new SingletonEndpoint(intent.getStringExtra(EXTRA_DESTINATION));
+				//send the given payload to destination, set bundle lifetime to 1 hour (3600 seconds)
 				mSession.send(destination, 3600, intent.getByteArrayExtra(EXTRA_PAYLOAD));
 			} catch (SessionDestroyedException e) {
 				Log.e(TAG, "session destroyed", e);
 			}
 		}
+		//if a received bundle should be marked as delivered
 		else if (ACTION_MARK_DELIVERED.equals(action)) {
 			try {
+				//get id of bundle to mark
 				BundleID id = intent.getParcelableExtra(EXTRA_BUNDLEID);
 				if (id != null) mSession.delivered(id);
 			} catch (SessionDestroyedException e) {
@@ -73,6 +89,12 @@ public class MyDtnIntentService extends DTNIntentService {
 		}
 	}
 
+	/**
+	 * called if service is connected to IBR-DTN
+	 * saves the session and sets DataHandler processing bundles
+	 *
+	 * @param session current Session
+     */
 	@Override
 	protected void onSessionConnected(Session session) {
 		mSession = session;
