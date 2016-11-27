@@ -93,7 +93,7 @@ bintray {
     configurations = ['archives']
     publish=true
     pkg {
-        userOrg = 'morgenroth'
+        userOrg = 'ibrdtn'
         repo = 'maven'
         name = 'ibrdtn-android-library'
         websiteUrl = 'https://github.com/ibrdtn/ibrdtn-android-library'
